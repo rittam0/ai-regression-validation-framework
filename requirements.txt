@@ -1,0 +1,18 @@
+fastapi
+uvicorn[standard]
+
+sqlalchemy
+psycopg2-binary
+
+pydantic
+
+pytest
+httpx
+
+numpy
+scikit-learn
+
+torch==2.7.1+cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+sentence-transformers
