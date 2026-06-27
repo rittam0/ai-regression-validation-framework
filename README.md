@@ -113,3 +113,7 @@ flowchart LR
 * Docker Compose
 * GitHub Actions
 * Kubernetes manifests
+
+## Failure Mode Validation
+
+Failure mode tested: intentional quality regressions are detected by the regression engine. The test suite verifies that large F1-score drops and large semantic-similarity drops return FAIL, preventing silent model-quality regressions from passing unnoticed.
