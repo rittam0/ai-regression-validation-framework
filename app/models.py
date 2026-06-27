@@ -1,8 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, DateTime, Float, String, Text
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, DateTime, Float, String, Text, Uuid
 
 from app.database import Base
 
@@ -15,7 +14,7 @@ class EvaluationRun(Base):
     __tablename__ = "evaluation_runs"
 
     id = Column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
     )
@@ -43,13 +42,13 @@ class EvaluationResult(Base):
     __tablename__ = "evaluation_results"
 
     id = Column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
     )
 
     evaluation_id = Column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         nullable=False,
     )
 
@@ -68,13 +67,13 @@ class EvaluationReport(Base):
     __tablename__ = "evaluation_reports"
 
     id = Column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
     )
 
     evaluation_id = Column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         nullable=False,
     )
 

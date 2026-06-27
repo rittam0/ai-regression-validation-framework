@@ -1,3 +1,6 @@
+import os
+from functools import lru_cache
+
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics import (
     precision_score,
@@ -6,9 +9,15 @@ from sklearn.metrics import (
 )
 from sklearn.metrics.pairwise import cosine_similarity
 
-model = SentenceTransformer(
-    "all-MiniLM-L6-v2"
+MODEL_NAME = os.getenv(
+    "SENTENCE_TRANSFORMER_MODEL",
+    "all-MiniLM-L6-v2",
 )
+
+
+@lru_cache(maxsize=1)
+def get_model():
+    return SentenceTransformer(MODEL_NAME)
 
 
 def calculate_metrics(expected: list[str], actual: list[str]):
@@ -44,6 +53,8 @@ def semantic_similarity(
     expected_text: str,
     actual_text: str,
 ):
+    model = get_model()
+
     expected_embedding = model.encode(
         expected_text
     )

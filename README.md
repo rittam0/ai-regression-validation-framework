@@ -1,90 +1,115 @@
 # AI Regression Validation Framework
 
-## Overview
+AI Regression Validation Framework is a FastAPI service for validating AI model outputs, calculating regression metrics, and storing evaluation history in PostgreSQL.
 
-AI Regression Validation Framework is an NLP-powered evaluation platform designed to validate and benchmark AI model outputs. The system combines traditional evaluation metrics with semantic similarity analysis to detect regressions and quality degradation across model versions.
+## Resume Highlights
 
-## Features
+* Built a containerized FastAPI evaluation service with Docker Compose and PostgreSQL.
+* Implemented automated Docker-based tests: `12 passed, 1 warning`.
+* Added GitHub Actions CI to run tests and build the Docker image.
+* Added Kubernetes manifests for API deployment, service exposure, probes, and resource limits.
+* Benchmarked the API with realistic evaluation payloads: `0.00%` error rate across `30` requests.
 
-* Evaluation lifecycle management
-* Precision, Recall, and F1-score calculation
-* Semantic similarity analysis using Sentence Transformers
-* Automated regression detection
-* PostgreSQL persistence layer
-* RESTful FastAPI endpoints
-* Docker containerization
-* GitHub Actions CI/CD pipeline
-* Automated testing with PyTest
+## Quick Start
 
-## Technology Stack
-
-### Backend
-
-* FastAPI
-* Python
-* SQLAlchemy
-
-### Database
-
-* PostgreSQL
-
-### AI / NLP
-
-* Sentence Transformers
-* Semantic Similarity Evaluation
-
-### DevOps
-
-* Docker
-* GitHub Actions
-
-### Testing
-
-* PyTest
-
-## System Workflow
-
-1. Create evaluation requests.
-2. Submit expected and actual model outputs.
-3. Generate evaluation metrics.
-4. Calculate semantic similarity scores.
-5. Detect quality regressions.
-6. Store results for future comparison.
-
-## Running Locally
+Start the API and PostgreSQL:
 
 ```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+docker compose up -d
 ```
 
-## Docker
-
-```bash
-docker build -t ai-regression-framework .
-docker run -p 8000:8000 ai-regression-framework
-```
-
-## Testing
-
-```bash
-python -m pytest tests -v
-```
-
-## API Documentation
-
-Swagger UI:
+Open the API docs:
 
 ```text
 http://localhost:8000/docs
 ```
 
-## Future Enhancements
+Stop the stack:
 
-* Kubernetes deployment
-* Model benchmarking dashboard
-* Multi-model comparison workflows
-* Automated evaluation scheduling
-* Cloud deployment
+```bash
+docker compose down
+```
+
+## Testing
+
+Docker is the canonical development and test environment for this project.
+
+```bash
+docker compose run --rm api sh -c "pip install -r requirements-dev.txt && python -m pytest tests -v"
+```
+
+Latest verified result:
+
+```text
+12 passed, 1 warning
+```
+
+## Benchmarking
+
+Run the benchmark after starting Docker Compose:
+
+```bash
+python3 scripts/benchmark.py
+```
+
+Latest benchmark summary:
+
+* Total requests: `30`
+* Throughput: `0.28 requests/sec`
+* Error rate: `0.00%`
+* p50 latency: `60.83 ms`
+* p95 latency: `2307.63 ms`
+* p99 latency: `100459.07 ms`
+
+The p99 value is a cold-start outlier from the first real semantic evaluation, when the SentenceTransformer model initializes. Steady-state non-evaluation endpoints are much lower; see [`docs/metrics.md`](docs/metrics.md).
+
+## Demo
+
+Swagger UI:
+
+![Swagger UI](screenshots/swagger-home.png)
+
+Evaluation created response:
+
+![Evaluation created](screenshots/evaluation-created.png)
+
+Video walkthrough: placeholder for a future recording.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    Client[Client] --> API[FastAPI API]
+    API --> Service[Service Layer]
+    Service --> Eval[Evaluation Engine]
+    Eval --> Metrics[Precision / Recall / F1]
+    Eval --> Similarity[SentenceTransformer Similarity]
+    Service --> DB[(PostgreSQL)]
+```
+
+## System Workflow
+
+1. Create an evaluation request.
+2. Submit expected and actual model outputs.
+3. Calculate precision, recall, F1, and semantic similarity.
+4. Detect regression status.
+5. Store the report in PostgreSQL.
+
+## Project Status
+
+* Docker Compose runs the API with PostgreSQL.
+* Docker-based tests are documented and verified.
+* GitHub Actions runs tests and builds the Docker image.
+* Kubernetes manifests are available in `k8s/`.
+* Benchmark results are available in [`docs/metrics.md`](docs/metrics.md).
+
+## Technology Stack
+
+* FastAPI
+* SQLAlchemy
+* PostgreSQL
+* Sentence Transformers
+* PyTest
+* Docker Compose
+* GitHub Actions
+* Kubernetes manifests

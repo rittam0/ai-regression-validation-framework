@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-regression-config
+data:
+  DATABASE_URL: postgresql+psycopg2://postgres:postgres@postgres:5432/ai_regression
+  SENTENCE_TRANSFORMER_MODEL: all-MiniLM-L6-v2
+  SENTENCE_TRANSFORMERS_HOME: /models/sentence-transformers

@@ -19,8 +19,13 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
 
       - name: Run Tests
         run: |
           python -m pytest tests -v
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ai-regression-validation-framework:ci .
